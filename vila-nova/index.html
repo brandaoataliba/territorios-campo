@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#4a6da7">
+
+  <title>Território 5 — Vila Nova</title>
+
+  <meta name="description"
+    content="Trabalho de campo · Acesse as ruas e o mapa.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Territórios | Campo">
+  <meta property="og:title"
+    content="Território 5 — Vila Nova">
+  <meta property="og:description"
+    content="Trabalho de campo · Acesse as ruas e o mapa.">
+  <meta property="og:image"
+    content="https://brandaoataliba.github.io/territorios-campo/previa-campo.png">
+  <meta property="og:image:alt"
+    content="Mapa com marcador de localização sobre fundo azul">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      background: #f4f4f2;
+      color: #2f3437;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #field-app {
+      display: block;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      border: 0;
+      background: #f4f4f2;
+    }
+
+    #notice {
+      max-width: 560px;
+      margin: 24px auto;
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    #notice h1 {
+      font-size: 24px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <section id="notice" role="status">
+    <h1>Território 5 — Vila Nova</h1>
+    <p id="message">Abrindo o território…</p>
+  </section>
+
+  <iframe
+    id="field-app"
+    title="Território 5 — Vila Nova"
+    referrerpolicy="no-referrer"
+    allow="clipboard-write"
+    hidden
+  ></iframe>
+
+  <noscript>
+    Ative o JavaScript para acessar as ruas e o mapa.
+  </noscript>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const NUMERO = "5";
+
+      const APP_URL =
+        "https://script.google.com/macros/s/AKfycbxw8Ub9PKXwlSRNQp2vqJ3Z9m5ud-a97TlzAZea3leU3EoOFXmXcUlj-dLuLPiqdicU/exec";
+
+      const params = new URLSearchParams(
+        window.location.search
+      );
+
+      const token = params.get("k") || "";
+      const numeros = params.getAll("t");
+
+      const valido =
+        params.getAll("k").length === 1 &&
+        /^[a-f0-9]{64}$/.test(token) &&
+        (
+          numeros.length === 0 ||
+          (numeros.length === 1 && numeros[0] === NUMERO)
+        );
+
+      if (!valido) {
+        document.getElementById("message").textContent =
+          "Para acessar este território, use o link completo " +
+          "enviado pelo responsável.";
+        return;
+      }
+
+      const destino = new URL(APP_URL);
+      destino.searchParams.set("t", NUMERO);
+      destino.searchParams.set("k", token);
+      destino.searchParams.set("interface", "github");
+
+      const frame = document.getElementById("field-app");
+      frame.src = destino.href;
+      frame.hidden = false;
+
+      document.getElementById("notice").hidden = true;
+    })();
+  </script>
+</body>
+</html>
